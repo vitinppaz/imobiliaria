@@ -36,5 +36,14 @@ class UsuarioController{
 
         $usuario = $usuario->remove($id);
     }
+    //logar com um usuario no sistema
+    public static function logar()
+    {
+        $usuario = new Usuario();
+        $usuario->setLogin($_POST['login']);
+        $usuario->setSenha($_POST['senha']);
+
+        return $usuario->logar();
+    }
 }
 ?>
