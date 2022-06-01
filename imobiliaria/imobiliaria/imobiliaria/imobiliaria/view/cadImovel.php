@@ -1,5 +1,5 @@
 
-    <form name="cadImovel" id="cadImovel" action="" method="post">
+    <form name="cadImovel" id="cadImovel" action="" method="post" enctype="multipart/form-data">
     <div class="form-group">
     <p> 
     <div style="width:300px;"  class="form-group">
@@ -10,10 +10,23 @@
     </p>
     <p> 
     <div style="width:300px;" class="form-group">
-      <label for="foto"> Foto:</label>
-      <input type="text" class="form-control" id="foto" name="foto"  value="<?php echo isset($imovel)?$imovel->getFoto():'' ?>" aria-describedby="foto" placeholder="Insira o link da foto">
+      <label class="col-sm-2 col-form-label text-right" for="foto"> Foto:</label>
+      <input type="file" class="form-control col-sm-8" id="foto" name="foto"/>
+
       
     </div>
+    <?php
+      if(isset($imovel) && !empty($imovel->getFoto())){
+    ?>  
+    <div class="form-group form-row">
+      <div class="text-center">
+        <img class="img-thumbnail" style="widht: 25%;"
+         src="data:<?php echo $imovel->getFotoTipo();?>;base64,<?php echo base64_encode($imovel->getFoto())?>">
+      </div>
+    </div>
+    <?php
+      }
+    ?>
     </p>
     </div>
     <p> 
@@ -41,11 +54,19 @@
     </form>
 
     <?php
+    //verifica se o botão salvar submit foi acionado
         if(isset($_POST["btnSalvar"])){
 
-            require_once "./controller/ImovelController.php";
+          //chama uma função PHP que permite informar a classe e o método que será acionado
 
-            call_user_func(array("ImovelController","salvar"));
+          if(isset($imovel)){
+            call_user_func(array('ImovelController', 'salvar'),$imovel->getFoto(),$imovel->getFotoTipo());
+          }else{
+            call_user_func(array('ImovelController', 'salvar'));
+          }
+
+
+           
 
             header("location:index.php?page=imovel&action=listar");
         }
