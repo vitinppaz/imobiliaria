@@ -31,7 +31,7 @@ class Usuario extends Banco{
     }
 
     public function setSenha($senha){
-        $this->senha = $senha;
+        $this->senha = md5 ($senha);
     }
 
     public function getPermissao(){
@@ -139,6 +139,28 @@ class Usuario extends Banco{
 
     public function count(){
 
+    }
+    
+    public function logar(){
+        //cria um objeto do tipo  conexao
+        $conexao = new Conexao();
+        //cria a conexao com o banco de dados
+        $conn = $conexao->getConection();
+        //cria query de selecao do usuario
+        $query = "SELECT * FROM usuario WHERE login = :login and senha = :senha";
+        //prepara a query para execução
+        $stmt = $conn->prepare($query);
+        //executa a query
+        if($stmt->execute(array(':login'=> $this->login, ':senha'=> $this->senha))){
+            //verifica se houve algum registro encontrado
+            if($stmt->rowCount() > 0){
+                $result = true;
+
+            }else{
+                $result = false;
+            }
+        }
+        return $result;
     }
 }
 ?>
